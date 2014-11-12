@@ -53,6 +53,18 @@ public class JDBC {
         	   rs = stmt.executeQuery(sql);
         	   printCustomerResultSet(rs);
         	   
+        	   System.out.println("\nInserting customer...");
+        	   String sql = "INSERT INTO customer VALUES (3, 'Steven', '123', 12345, 23456)";
+        	   
+        	   rs = stmt.executeQuery(sql);
+        	   printProductResultSet(rs);
+        	   
+        	   System.out.println("\nDeleting customer...");
+        	   String sql = "DELETE FROM customer WHERE name = 'Steven'";
+        	   
+        	   rs = stmt.executeQuery(sql);
+        	   printProductResultSet(rs);
+        	   
         	   System.out.println("\nSelecting all products...");
         	   // Create statement
         	   sql = "SELECT * FROM product";
