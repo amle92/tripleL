@@ -38,9 +38,32 @@ public class JDBC {
         	   System.out.println(rs.getInt(1));
            }
            
+           // Select all customers
+           Statement stmt = null;
+           try {
+        	   System.out.println("Selecting all customers...");
+        	   // Create statement
+        	   stmt = conn.createStatement();
+        	   String sql = "SELECT * FROM customer";
+        	   
+        	   // Execute Statement
+        	   rs = stmt.executeQuery(sql);
+        	   printCustomerResultSet(rs);
+        	   
+        	   System.out.println("Selecting all products...");
+        	   // Create statement
+        	   sql = "SELECT * FROM product";
+        	   
+        	   // Execute Statement
+        	   rs = stmt.executeQuery(sql);
+        	   printProductResultSet(rs);
+        	   
+           }
+           catch (SQLException e) {}
+           finally { stmt.close();}
            
            
-           makeDatabase();
+           
        }
        catch(SQLException sqle)
        {
@@ -72,6 +95,29 @@ public class JDBC {
       
     }
     
+    private static void printCustomerResultSet (ResultSet rs) throws SQLException
+    {
+    	while (rs.next())
+    	{
+    		int id = rs.getInt("customerID");
+    		String name = rs.getString("name");
+    		String address = rs.getString("address");
+    		System.out.println("customerID: " + id + ", Name: " + name + ", Address: " + address);
+    	}
+    }
+    
+    private static void printProductResultSet (ResultSet rs) throws SQLException
+    {
+    	while (rs.next())
+    	{
+    		int id = rs.getInt("productID");
+    		String name = rs.getString("name");
+    		int quantity = rs.getInt("quantity");
+    		double price = rs.getInt("price");
+    		String brand = rs.getString("brand");
+    		System.out.println("productID: " + id + ", Product Name: " + name + ", Quantity: " + quantity + ", Price: " + price + ", Brand: " + brand);
+    	}
+    }
     
    
 }
