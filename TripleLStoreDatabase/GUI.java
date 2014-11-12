@@ -51,8 +51,8 @@ public class GUI
 		});
 		
 		myFrame.add(tableText, BorderLayout.NORTH);
-		myFrame.add(queryText, BorderLayout.NORTH);
-		myFrame.add(panel, BorderLayout.CENTER);
+		myFrame.add(queryText, BorderLayout.CENTER);
+		myFrame.add(panel, BorderLayout.SOUTH);
 		
 		myFrame.pack();
 		myFrame.setLayout(new BorderLayout());
