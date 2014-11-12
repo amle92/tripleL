@@ -21,10 +21,13 @@ public class JDBC {
            System.out.println("Connecting to database...");
            conn = DriverManager.getConnection(DBURL, USER, PW);
            
+           // Check stock of product with productID of 2
+           int queryID = 2;
+           System.out.println("\nCalling CheckStock where productID = " + queryID);
            // Create the callable statement
            CallableStatement cs = conn.prepareCall("{CALL CheckStock(?)}");
            // Set the first int parameter
-           cs.setInt(1, 2);
+           cs.setInt(1, queryID);
            ResultSet rs;
            boolean hasResult = cs.execute();
            
@@ -41,7 +44,7 @@ public class JDBC {
            // Select all customers
            Statement stmt = null;
            try {
-        	   System.out.println("Selecting all customers...");
+        	   System.out.println("\nSelecting all customers...");
         	   // Create statement
         	   stmt = conn.createStatement();
         	   String sql = "SELECT * FROM customer";
@@ -50,7 +53,7 @@ public class JDBC {
         	   rs = stmt.executeQuery(sql);
         	   printCustomerResultSet(rs);
         	   
-        	   System.out.println("Selecting all products...");
+        	   System.out.println("\nSelecting all products...");
         	   // Create statement
         	   sql = "SELECT * FROM product";
         	   
