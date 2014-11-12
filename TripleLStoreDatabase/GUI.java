@@ -2,16 +2,16 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class MenuFrame
+public class GUI
 {
 	public static void main(String[]args)
 	{
-		final JFrame styleFrame = new JFrame();
+		final JFrame myFrame = new JFrame();
 		
 		final JTextField tableText = new JTextField();
 		tableText.setText("TableNameHere");
-		final JTextField queryText = new JtextField();
-		queryText.setText(“QueryNameHere”);
+		final JTextField queryText = new JTextField();
+		queryText.setText("QueryNameHere");
 
 		final JButton insertButton = new JButton("Insert");
 		final JButton selectButton = new JButton("Select");
@@ -47,7 +47,7 @@ public class MenuFrame
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-
+			}
 		});
 		
 		myFrame.add(tableText, BorderLayout.NORTH);
