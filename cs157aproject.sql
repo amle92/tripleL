@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2014 at 06:33 AM
+-- Generation Time: Dec 04, 2014 at 11:45 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -24,6 +24,13 @@ DELIMITER $$
 --
 -- Procedures
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addToWishlist`(IN `cusID` INT, IN `prodID` INT)
+    NO SQL
+INSERT INTO wishlist(customerID,productID,quantity,dateAdded)
+VALUES (cusID,prodID,
+        (SELECT quantity FROM product WHERE productID=prodID)
+        ,NOW())$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `BrandsWithAtLeast`(IN `p` INT)
     NO SQL
 SELECT brand, SUM(price) as "total"
@@ -36,6 +43,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `CheckStock`(IN `ID` INT)
 BEGIN
 SELECT quantity FROM product WHERE productID = ID;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getWishlistedItems`(IN `cusID` INT)
+    NO SQL
+SELECT * 
+FROM product p,wishlist w 
+WHERE customerID=cusID AND p.productID=w.productID$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertPurchase`(IN purchase_ID  INT, IN customer_ID  INT, IN product_ID   INT,
 IN buy_quantity  INT, IN credit_card   INT)
@@ -190,6 +203,14 @@ CREATE TABLE IF NOT EXISTS `wishlist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Dumping data for table `wishlist`
+--
+
+INSERT INTO `wishlist` (`customerID`, `productID`, `dateAdded`, `quantity`) VALUES
+(14, 17, '2014-12-04 14:37:41', 5),
+(14, 19, '2014-12-04 14:22:32', 100);
+
+--
 -- Constraints for dumped tables
 --
 
@@ -197,8 +218,8 @@ CREATE TABLE IF NOT EXISTS `wishlist` (
 -- Constraints for table `purchases`
 --
 ALTER TABLE `purchases`
-  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `users`
@@ -210,8 +231,8 @@ ALTER TABLE `users`
 -- Constraints for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  ADD CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `wishlist_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `wishlist_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
