@@ -13,9 +13,8 @@
 
 		$query = "SELECT * FROM users WHERE username='$username'";
 		$results = mysqli_query($conn, $query) or die(mysql_error().$query);
-		$results = mysql_fetch_array($results);
 
-		if (mysql_num_rows($results) > 0) {
+		if (mysqli_num_rows($results) > 0) {
 			print 'Username is already taken<br>';
 			$error = true;
 		}
@@ -25,26 +24,29 @@
 			$error = true;
 		}
 
-		//Check for 6 characters
 		if(strlen($password) < 6 || strlen($password) > 20){
 			print "Password must be 6 to 20 characters.<br>";
 			$error = true;
 		}
 
+		if(strlen($username) > 20 || strlen($username) < 4) {
+			print "Username must be 4 to 20 characters.<br>";
+		}
+
 		if (!$error) {
-			$query = "INSERT into customer(name) values ('$name')";
+			$query = "INSERT into customer(name, username) values ('$name','$username')";
 			mysqli_query($conn, $query);
 
-			$query = "SELECT * FROM customer WHERE name='$name'";
+			$query = "SELECT * FROM customer WHERE username='$username'";
 			$results = mysqli_query($conn, $query);
-			$data = mysql_fetch_array($results);
+			$data = mysqli_fetch_array($results);
 			$id = $data['customerID'];
 
 			$query = "INSERT into users(customerID,username,password,role) values ('$id','$username','$password','U')";
 			$data = mysqli_query($conn, $query);
 
 			print "You have successfully been registered<br>";
-			print $data;
+			header('Location: login.php');
 		}
 	}
 
@@ -58,7 +60,7 @@
 				<br>
 				<div>
 					<label for='username'>Username: </label>
-					<input type='text' name='username' placeholder='Username' value='$username' pattern='.{4,}'' title='4 characters minimum' required>
+					<input type='text' name='username' placeholder='Username' value='$username' pattern='{4,}' title='4 characters minimum' required>
 				</div>
 				<br>
 				<div>
@@ -83,6 +85,7 @@
 </head>
 
 <body>
+	<?php require_once('navbar.php'); ?>
 	<h3>New User Registration:</h3>
 	<?php printForm($name,$username); ?>
 
