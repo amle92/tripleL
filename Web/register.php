@@ -80,16 +80,17 @@
 ?>
 
 <html>
-<head>
 
-</head>
+	<head>
 
-<body>
-	<?php require_once('navbar.php'); ?>
-	<h3>New User Registration:</h3>
-	<?php printForm($name,$username); ?>
+	</head>
+
+	<body>
+		<?php require_once('navbar.php'); ?>
+		<h3>New User Registration:</h3>
+		<?php printForm($name,$username); ?>
 
 
-</body>
+	</body>
 
 </html>

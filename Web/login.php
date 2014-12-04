@@ -33,25 +33,25 @@
 
 <html>
 
-<head>
-</head>
+	<head>
+	</head>
 
-<body>
-	<?php require_once("navbar.php"); ?>
+	<body>
+		<?php require_once("navbar.php"); ?>
 
-	<form action='login.php' method='post'>
-		<div>
-			<label for='username'>Username: </label>
-			<input type='text' name='username' placeholder='Username' value='<?php echo "$username"; ?>' pattern='{4,}' title='4 characters minimum' required>
-		</div>
-		<br>
-		<div>
-			<label for='password'>Password: </label>
-			<input type='password' name='password' placeholder='Password' required>
-		</div>
-		<input type='submit' name='submit' value='Login'>
-	</form>
+		<form action='login.php' method='post'>
+			<div>
+				<label for='username'>Username: </label>
+				<input type='text' name='username' placeholder='Username' value='<?php echo "$username"; ?>' pattern='{4,}' title='4 characters minimum' required>
+			</div>
+			<br>
+			<div>
+				<label for='password'>Password: </label>
+				<input type='password' name='password' placeholder='Password' required>
+			</div>
+			<input type='submit' name='submit' value='Login'>
+		</form>
 
-</body>
+	</body>
 
 </html>
