@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2014 at 06:15 AM
+-- Generation Time: Dec 04, 2014 at 06:33 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   `productID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `price` varchar(6) NOT NULL,
+  `price` varchar(10) NOT NULL,
   `brand` varchar(50) NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`productID`),
@@ -185,8 +185,8 @@ CREATE TABLE IF NOT EXISTS `wishlist` (
   `dateAdded` datetime NOT NULL,
   `quantity` int(11) NOT NULL,
   UNIQUE KEY `customerID` (`customerID`,`productID`),
-  KEY `productID` (`productID`),
-  KEY `quantity` (`quantity`)
+  KEY `quantity` (`quantity`),
+  KEY `wishlist_ibfk_2` (`productID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -197,8 +197,8 @@ CREATE TABLE IF NOT EXISTS `wishlist` (
 -- Constraints for table `purchases`
 --
 ALTER TABLE `purchases`
-  ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`),
-  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`);
+  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `users`
@@ -210,8 +210,8 @@ ALTER TABLE `users`
 -- Constraints for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  ADD CONSTRAINT `wishlist_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`),
-  ADD CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`);
+  ADD CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `wishlist_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
