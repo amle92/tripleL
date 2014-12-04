@@ -43,6 +43,8 @@
 	function loggedInUser() {
 		echo "
 			<h2>
+				<a href='userpage.php'>User Homepage</a>
+				 | 
 				<a href='viewproducts.php'>View Products</a>
 				 | 
 				<a href='edituser.php'>Edit Info</a>

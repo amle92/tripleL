@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	require_once("dbconnect.php");
+	require_once("config.php");
 
 	$customerID = $_SESSION['customerID'];
 	$query = "SELECT * FROM customer WHERE customerID='$_SESSION[customerID]'";
