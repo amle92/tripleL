@@ -12,9 +12,9 @@
 		$confirm_pass = $_POST["confirm_pass"];
 
 		$query = "SELECT * FROM users WHERE username='$username'";
-		$results = mysqli_query($conn, $query) or die(mysql_error().$query);
+		$result = mysqli_query($conn, $query) or die(mysql_error().$query);
 
-		if (mysqli_num_rows($results) > 0) {
+		if (mysqli_num_rows($result) > 0) {
 			print 'Username is already taken<br>';
 			$error = true;
 		}
@@ -38,8 +38,8 @@
 			mysqli_query($conn, $query);
 
 			$query = "SELECT * FROM customer WHERE username='$username'";
-			$results = mysqli_query($conn, $query);
-			$data = mysqli_fetch_array($results);
+			$result = mysqli_query($conn, $query);
+			$data = mysqli_fetch_array($result);
 			$id = $data['customerID'];
 
 			$query = "INSERT into users(customerID,username,password,role) values ('$id','$username','$password','U')";
@@ -50,7 +50,8 @@
 		}
 	}
 
-	function printForm($name,$username) {
+	function printForm() {
+		global $name,$username;
 		echo "
 			<form action='register.php' method='post'>
 				<div>
@@ -79,6 +80,7 @@
 
 ?>
 
+<!DOCTYPE html>
 <html>
 
 	<head>
@@ -88,7 +90,7 @@
 	<body>
 		<?php require_once('navbar.php'); ?>
 		<h3>New User Registration:</h3>
-		<?php printForm($name,$username); ?>
+		<?php printForm(); ?>
 
 
 	</body>

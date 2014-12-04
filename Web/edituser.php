@@ -26,7 +26,8 @@
 	}
 	
 
-	function printUserForm($name,$address,$phone,$creditcard){
+	function printUserForm(){
+		global $name,$address,$phone,$creditcard;
 		echo "
 			<form action='edituser.php' method='post'>
 				<div>
@@ -54,6 +55,7 @@
 	}
 ?>
 
+<!DOCTYPE html>
 <html>
 
 	<head>
@@ -62,7 +64,7 @@
 	<body>
 		<?php require_once('navbar.php'); ?>
 		<h3>Edit Your Information:</h3>
-		<?php printUserForm($name,$address,$phone,$creditcard); ?>
+		<?php printUserForm(); ?>
 	</body>
 
 </html>

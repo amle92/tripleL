@@ -20,6 +20,7 @@
 			$customerID = $data['customerID'];
 			$_SESSION['username'] = $username;
 			$_SESSION['customerID'] = $customerID;
+			$_SESSION['role'] = $data['role'];
 			header('Location: userpage.php');
 		}
 		else {
@@ -30,7 +31,7 @@
 	
 ?>
 
-
+<!DOCTYPE html>
 <html>
 
 	<head>
@@ -39,6 +40,7 @@
 	<body>
 		<?php require_once("navbar.php"); ?>
 
+		<h3>Login: </h3>
 		<form action='login.php' method='post'>
 			<div>
 				<label for='username'>Username: </label>
