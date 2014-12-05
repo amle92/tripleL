@@ -35,6 +35,8 @@
 				 | 
 				<a href='addproduct.php'>Add Product</a>
 				 | 
+				<a href='viewpurchases.php'>View Purchases</a>
+				 | 
 				<a href='logout.php'>Logout</a>
 			</h2>
 		";
@@ -48,6 +50,8 @@
 				<a href='viewproducts.php'>View Products</a>
 				 | 
 				<a href='edituser.php'>Edit Info</a>
+				 | 
+				<a href='viewpurchases.php'>View Purchases</a>
 				 | 
 				<a href='logout.php'>Logout</a>
 			</h2>

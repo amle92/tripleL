@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2014 at 11:45 PM
+-- Generation Time: Dec 05, 2014 at 07:30 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -24,7 +24,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addToWishlist`(IN `cusID` INT, IN `prodID` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AddToWishlist`(IN `cusID` INT, IN `prodID` INT)
     NO SQL
 INSERT INTO wishlist(customerID,productID,quantity,dateAdded)
 VALUES (cusID,prodID,
@@ -36,7 +36,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `BrandsWithAtLeast`(IN `p` INT)
 SELECT brand, SUM(price) as "total"
 FROM product
 GROUP BY brand
-HAVING SUM(price) > p$$
+HAVING total > p$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CheckStock`(IN `ID` INT)
     NO SQL
@@ -44,17 +44,20 @@ BEGIN
 SELECT quantity FROM product WHERE productID = ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getWishlistedItems`(IN `cusID` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetWishlistedItems`(IN `cusID` INT)
     NO SQL
 SELECT * 
 FROM product p,wishlist w 
 WHERE customerID=cusID AND p.productID=w.productID$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertPurchase`(IN purchase_ID  INT, IN customer_ID  INT, IN product_ID   INT,
-IN buy_quantity  INT, IN credit_card   INT)
-BEGIN
-INSERT INTO purchases(purchaseID,customerID,productID,buyquantity,creditcard,datetime) VALUES (purchase_ID, customer_ID, product_ID, buy_quantity, credit_card, NOW());
-END$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertPurchase`(IN `cusID` INT, IN `prodID` INT, IN `quant` INT, IN `card` VARCHAR(15))
+    NO SQL
+INSERT INTO purchases(customerID,productID,buyquantity,creditcard,datetime)
+VALUES (cusID,prodID,quant,card,NOW())$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SetUpdatedAt`(IN `prodID` INT)
+    NO SQL
+UPDATE product SET updatedAt=NOW() WHERE productID=prodID$$
 
 DELIMITER ;
 
@@ -74,15 +77,16 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `username` varchar(20) NOT NULL,
   PRIMARY KEY (`customerID`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `customer`
 --
 
 INSERT INTO `customer` (`customerID`, `name`, `address`, `phone`, `creditcard`, `lastpurchase`, `username`) VALUES
-(14, 'Tester', 'test', '(408)111-1111', '1234123412341234', '0000-00-00 00:00:00', 'test'),
-(15, 'Administrator', '', '', '', '0000-00-00 00:00:00', 'admin');
+(14, 'Tester', 'test', '(408)111-1111', '1234123412341234', '2014-12-04 22:25:44', 'test'),
+(15, 'Administrator', '', '', '', '0000-00-00 00:00:00', 'admin'),
+(16, 'Tester2', '', '', '', '0000-00-00 00:00:00', 'test2');
 
 -- --------------------------------------------------------
 
@@ -106,9 +110,9 @@ CREATE TABLE IF NOT EXISTS `product` (
 --
 
 INSERT INTO `product` (`productID`, `name`, `quantity`, `price`, `brand`, `updatedAt`) VALUES
-(17, 'Umbrella', 5, '9.99', 'Kirkland', '2014-12-03 20:37:46'),
-(18, 'Lighter', 30, '1.99', 'BIC', '2014-12-03 20:44:39'),
-(19, 'Facial Tissue', 100, '4.99', 'Kleenex', '2014-12-03 20:46:24');
+(17, 'Umbrella', 2, '9.99', 'Kirkland', '2014-12-04 21:57:45'),
+(18, 'Lighter', 28, '1.99', 'BIC', '2014-12-04 22:01:11'),
+(19, 'Facial Tissue', 91, '4.99', 'Kleenex', '2014-12-04 22:25:44');
 
 --
 -- Triggers `product`
@@ -117,8 +121,6 @@ DROP TRIGGER IF EXISTS `productUpdate`;
 DELIMITER //
 CREATE TRIGGER `productUpdate` AFTER UPDATE ON `product`
  FOR EACH ROW BEGIN
-UPDATE product SET updatedAt = NOW()
-WHERE productID = NEW.productID;
 UPDATE wishlist SET quantity = NEW.quantity
 WHERE productID = NEW.productID;
 END
@@ -136,13 +138,25 @@ CREATE TABLE IF NOT EXISTS `purchases` (
   `customerID` int(11) NOT NULL,
   `productID` int(11) NOT NULL,
   `buyquantity` int(11) NOT NULL,
-  `creditcard` int(11) NOT NULL,
+  `creditcard` varchar(20) NOT NULL,
   `datetime` datetime NOT NULL,
   PRIMARY KEY (`purchaseID`),
-  UNIQUE KEY `customerID` (`customerID`,`productID`),
-  KEY `customerID_2` (`customerID`),
-  KEY `productID` (`productID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  KEY `productID` (`productID`),
+  KEY `customerID` (`customerID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
+
+--
+-- Dumping data for table `purchases`
+--
+
+INSERT INTO `purchases` (`purchaseID`, `customerID`, `productID`, `buyquantity`, `creditcard`, `datetime`) VALUES
+(19, 14, 17, 1, '123412341234123', '2014-12-04 21:57:45'),
+(22, 14, 18, 2, '123412341234123', '2014-12-04 22:01:11'),
+(23, 14, 19, 2, '123412341234123', '2014-12-04 22:01:38'),
+(24, 14, 19, 2, '123412341234123', '2014-12-04 22:09:16'),
+(25, 14, 19, 2, '123412341234123', '2014-12-04 22:09:59'),
+(26, 14, 19, 2, '123412341234123', '2014-12-04 22:19:50'),
+(27, 14, 19, 1, '123412341234123', '2014-12-04 22:25:44');
 
 --
 -- Triggers `purchases`
@@ -159,6 +173,7 @@ WHERE productID = NEW.productID;
 
 UPDATE wishlist SET quantity = quantity - NEW.buyquantity
 WHERE productID = NEW.productID;
+
 END
 //
 DELIMITER ;
@@ -184,7 +199,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`username`, `password`, `customerID`, `role`) VALUES
 ('admin', 'password', 15, 'A'),
-('test', 'test123', 14, 'U');
+('test', 'test123', 14, 'U'),
+('test2', 'test123', 16, 'U');
 
 -- --------------------------------------------------------
 
@@ -207,8 +223,9 @@ CREATE TABLE IF NOT EXISTS `wishlist` (
 --
 
 INSERT INTO `wishlist` (`customerID`, `productID`, `dateAdded`, `quantity`) VALUES
-(14, 17, '2014-12-04 14:37:41', 5),
-(14, 19, '2014-12-04 14:22:32', 100);
+(14, 19, '2014-12-04 22:19:46', 91),
+(16, 17, '2014-12-04 22:10:32', 2),
+(16, 19, '2014-12-04 22:10:34', 91);
 
 --
 -- Constraints for dumped tables
@@ -218,8 +235,8 @@ INSERT INTO `wishlist` (`customerID`, `productID`, `dateAdded`, `quantity`) VALU
 -- Constraints for table `purchases`
 --
 ALTER TABLE `purchases`
-  ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `users`

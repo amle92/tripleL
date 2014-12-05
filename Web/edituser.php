@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	require_once("config.php");
+	require_once("dbconnect.php");
 
 	$customerID = $_SESSION['customerID'];
 	$query = "SELECT * FROM customer WHERE customerID='$_SESSION[customerID]'";
@@ -59,6 +59,7 @@
 <html>
 
 	<head>
+		<?php require_once('config.php'); ?>
 	</head>
 
 	<body>

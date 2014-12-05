@@ -1,5 +1,5 @@
 <?php
-	require_once("config.php");
+	require_once("dbconnect.php");
 
 	$name = "";
 	$quantity = "";
@@ -68,7 +68,7 @@
 <html>
 
 <head>
-
+	<?php require_once("config.php"); ?>
 </head>
 
 <body>

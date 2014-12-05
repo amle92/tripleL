@@ -1,5 +1,5 @@
 <?php
-	require_once('config.php');
+	require_once('dbconnect.php');
 
 	$error = false;
 	$name = "";
@@ -84,7 +84,7 @@
 <html>
 
 	<head>
-
+		<?php require_once("config.php"); ?>
 	</head>
 
 	<body>
