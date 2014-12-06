@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 05, 2014 at 07:30 AM
+-- Generation Time: Dec 06, 2014 at 01:27 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -38,11 +38,18 @@ FROM product
 GROUP BY brand
 HAVING total > p$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CheckStock`(IN `ID` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ChangeStock`(IN `ID` INT, IN `quant` INT)
     NO SQL
 BEGIN
-SELECT quantity FROM product WHERE productID = ID;
+UPDATE product SET quantity=quant WHERE productID = ID;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetPurchases`(IN `custID` INT)
+    NO SQL
+SELECT prod.name,pur.buyquantity,pur.creditcard,prod.productID,pur.datetime
+FROM product prod, purchases pur
+WHERE pur.customerID=custID AND prod.productID=pur.productID
+ORDER BY pur.datetime DESC$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetWishlistedItems`(IN `cusID` INT)
     NO SQL
@@ -110,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `product` (
 --
 
 INSERT INTO `product` (`productID`, `name`, `quantity`, `price`, `brand`, `updatedAt`) VALUES
-(17, 'Umbrella', 2, '9.99', 'Kirkland', '2014-12-04 21:57:45'),
+(17, 'Umbrella', 5, '4.99', 'Kirkland', '2014-12-04 21:57:45'),
 (18, 'Lighter', 28, '1.99', 'BIC', '2014-12-04 22:01:11'),
 (19, 'Facial Tissue', 91, '4.99', 'Kleenex', '2014-12-04 22:25:44');
 
@@ -138,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `purchases` (
   `customerID` int(11) NOT NULL,
   `productID` int(11) NOT NULL,
   `buyquantity` int(11) NOT NULL,
-  `creditcard` varchar(20) NOT NULL,
+  `creditcard` varchar(16) NOT NULL,
   `datetime` datetime NOT NULL,
   PRIMARY KEY (`purchaseID`),
   KEY `productID` (`productID`),
@@ -150,13 +157,13 @@ CREATE TABLE IF NOT EXISTS `purchases` (
 --
 
 INSERT INTO `purchases` (`purchaseID`, `customerID`, `productID`, `buyquantity`, `creditcard`, `datetime`) VALUES
-(19, 14, 17, 1, '123412341234123', '2014-12-04 21:57:45'),
-(22, 14, 18, 2, '123412341234123', '2014-12-04 22:01:11'),
-(23, 14, 19, 2, '123412341234123', '2014-12-04 22:01:38'),
-(24, 14, 19, 2, '123412341234123', '2014-12-04 22:09:16'),
-(25, 14, 19, 2, '123412341234123', '2014-12-04 22:09:59'),
-(26, 14, 19, 2, '123412341234123', '2014-12-04 22:19:50'),
-(27, 14, 19, 1, '123412341234123', '2014-12-04 22:25:44');
+(19, 14, 17, 1, '1234123412341234', '2014-12-04 21:57:45'),
+(22, 14, 18, 2, '1234123412341234', '2014-12-04 22:01:11'),
+(23, 14, 19, 2, '1234123412341234', '2014-12-04 22:01:38'),
+(24, 14, 19, 2, '1234123412341234', '2014-12-04 22:09:16'),
+(25, 14, 19, 2, '1234123412341234', '2014-12-04 22:09:59'),
+(26, 14, 19, 2, '1234123412341234', '2014-12-04 22:19:50'),
+(27, 14, 19, 1, '1234123412341234', '2014-12-04 22:25:44');
 
 --
 -- Triggers `purchases`
@@ -224,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `wishlist` (
 
 INSERT INTO `wishlist` (`customerID`, `productID`, `dateAdded`, `quantity`) VALUES
 (14, 19, '2014-12-04 22:19:46', 91),
-(16, 17, '2014-12-04 22:10:32', 2),
+(16, 17, '2014-12-04 22:10:32', 5),
 (16, 19, '2014-12-04 22:10:34', 91);
 
 --
@@ -235,8 +242,8 @@ INSERT INTO `wishlist` (`customerID`, `productID`, `dateAdded`, `quantity`) VALU
 -- Constraints for table `purchases`
 --
 ALTER TABLE `purchases`
-  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `users`

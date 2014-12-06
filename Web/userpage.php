@@ -19,7 +19,8 @@
 						<th>Quantity</th>
 						<th>Price</th>
 						<th>Action</th>
-					</tr>";
+					</tr>
+				</thead>";
 
 			while ($data = mysqli_fetch_array($result)) {
 				$productID = $data['productID'];

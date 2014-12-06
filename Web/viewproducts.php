@@ -6,53 +6,99 @@
 	$result = mysqli_query($conn, $query);
 ?>
 
-<script>
-	function addToWishlist(id) {
-		$.post("modifyWishlist.php", {productID:id,action:"add"},function(){
-			alert("Item added to wishlist");
-		});
-	}
-
-	function purchase(prodID,name) {
-		var quant = "a";
-
-		while (isNaN(quant)) {
-			quant = prompt("How many would you like to purchase?");
-
-			if (isNaN(quant)) {
-				alert("Please enter a number.");
-			}
-			else if(quant == null){
-				quant = 0;
-			}
-		}
-
-		var confirm = window.confirm("Are you sure you want to buy " + quant + " " + name + "?");
-
-		if (confirm) {
-			$.post("purchaseproduct.php",{productID:prodID,quantity:quant},function(data){
-				//alert(data);
-				if(data == -1){
-					alert("We do not have enough stock for your purchase. Please try again.");
-				}
-				else if(data == -2){
-					alert("Please enter a positive whole number greater than 0.");
-				}
-				else if(data == 0){
-					alert("Please enter your credit card information first (Edit Info).");
-				}
-				else if(data == 1){
-					alert("You purchased "+ quant + " " + name);
-					location.reload();
-				}
-			});
-		}
-	}
-	
-</script>
-
 <!DOCTYPE html>
 <html>
+
+	<script>
+		function addToWishlist(id) {
+			$.post("modifyWishlist.php", {productID:id,action:"add"},function(){
+				alert("Item added to wishlist");
+			});
+		}
+
+		function changeStock(prodID,name) {
+			var quant = "a";
+
+			while (isNaN(quant) || quant < 0) {
+				quant = prompt("How many " + name + " are there?");
+
+				if (isNaN(quant)) {
+					alert("Please enter a number.");
+				}
+				else if(quant < 0){
+					alert("Please enter a positive whole number (or 0).");
+				}
+				else if(quant == null){
+					quant = 0;
+				}
+			}
+
+			var confirm = window.confirm("Change stock of " + name + " to " + quant + "?");
+
+			if (confirm){
+				$.post('changestock.php',{productID:prodID,quantity:quant},function(data){
+					alert(data);
+					location.reload();
+				});
+			}
+
+		}
+
+		function changePrice(prodID,name) {
+			var price = prompt("Enter the new price of " + name + " (without $)");
+			var format = new RegExp('[0-9]+.[0-9]{2}');
+
+			while (!format.test(price)) {
+				alert("Please enter a valid price (e.g. 9.99)");
+				price = prompt("Enter the new price " + name +" (without $)");
+			}
+
+			if (window.confirm("Change the price of " + name + " to " + price + "?")) {
+				$.post('changeprice.php',{productID:prodID,price:price},function(data){
+					alert(data);
+					location.reload();
+				});
+			}
+
+		}
+
+		function purchase(prodID,name) {
+			var quant = "a";
+
+			while (isNaN(quant)) {
+				quant = prompt("How many would you like to purchase?");
+
+				if (isNaN(quant)) {
+					alert("Please enter a number.");
+				}
+				else if(quant == null){
+					quant = 0;
+				}
+			}
+
+			var confirm = window.confirm("Are you sure you want to buy " + quant + " " + name + "?");
+
+			if (confirm) {
+				$.post("purchaseproduct.php",{productID:prodID,quantity:quant},function(data){
+					//alert(data);
+					if(data == -1){
+						alert("We do not have enough stock for your purchase. Please try again.");
+					}
+					else if(data == -2){
+						alert("Please enter a positive whole number greater than 0.");
+					}
+					else if(data == 0){
+						alert("Please enter your credit card information first (Edit Info).");
+					}
+					else if(data == 1){
+						alert("You purchased "+ quant + " " + name);
+						location.reload();
+					}
+				});
+			}
+		}
+		
+	</script>
 
 	<head>
 		<?php require_once("config.php"); ?>
@@ -98,8 +144,8 @@
 				if(isset($_SESSION['role'])){
 					echo "<td>";
 					if ($_SESSION['role'] == 'A'){
-						echo "<button type='button' onclick='addStock($productID)' class='addStock'>Add Stock</button>";
-						echo "<button type='button' onclick='changePrice($productID)' class='changePrice'>Change Price</button>";
+						echo "<button type='button' onclick='changeStock($productID,\"$name\")' class='changeStock'>Change Stock</button>";
+						echo "<button type='button' onclick='changePrice($productID,\"$name\")' class='changePrice'>Change Price</button>";
 					}
 					else{
 						echo "<button type='button' onclick='purchase($productID,\"$name\")' class='purchase'>Purchase</button>";
