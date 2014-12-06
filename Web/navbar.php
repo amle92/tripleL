@@ -31,7 +31,7 @@
 			<h2>
 				<a href='viewproducts.php'>View Products</a>
 				 | 
-				<a href=''>View Users</a>
+				<a href='viewusers.php'>View Users</a>
 				 | 
 				<a href='addproduct.php'>Add Product</a>
 				 | 

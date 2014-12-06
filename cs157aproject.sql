@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2014 at 01:27 AM
+-- Generation Time: Dec 06, 2014 at 02:26 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -51,6 +51,13 @@ FROM product prod, purchases pur
 WHERE pur.customerID=custID AND prod.productID=pur.productID
 ORDER BY pur.datetime DESC$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetUserInfo`()
+    NO SQL
+SELECT *
+FROM customer c JOIN users u ON c.customerID=u.customerID
+WHERE role='U' OR role='A'
+ORDER BY role ASC$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetWishlistedItems`(IN `cusID` INT)
     NO SQL
 SELECT * 
@@ -84,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `username` varchar(20) NOT NULL,
   PRIMARY KEY (`customerID`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `customer`
@@ -93,7 +100,8 @@ CREATE TABLE IF NOT EXISTS `customer` (
 INSERT INTO `customer` (`customerID`, `name`, `address`, `phone`, `creditcard`, `lastpurchase`, `username`) VALUES
 (14, 'Tester', 'test', '(408)111-1111', '1234123412341234', '2014-12-04 22:25:44', 'test'),
 (15, 'Administrator', '', '', '', '0000-00-00 00:00:00', 'admin'),
-(16, 'Tester2', '', '', '', '0000-00-00 00:00:00', 'test2');
+(16, 'Tester2', '', '', '', '0000-00-00 00:00:00', 'test2'),
+(17, 'Store Master', '', '', '', '0000-00-00 00:00:00', 'master');
 
 -- --------------------------------------------------------
 
@@ -195,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` varchar(20) NOT NULL,
   `password` varchar(20) NOT NULL,
   `customerID` int(11) NOT NULL,
-  `role` enum('A','U') NOT NULL,
+  `role` enum('A','U','M') NOT NULL,
   PRIMARY KEY (`username`),
   KEY `customerID` (`customerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -206,6 +214,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`username`, `password`, `customerID`, `role`) VALUES
 ('admin', 'password', 15, 'A'),
+('master', 'password', 17, 'M'),
 ('test', 'test123', 14, 'U'),
 ('test2', 'test123', 16, 'U');
 

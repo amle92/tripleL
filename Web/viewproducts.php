@@ -118,6 +118,12 @@
 							<th>Price</th>";
 
 			if (isset($_SESSION['username'])) {
+				if ($_SESSION['role'] == 'M' || $_SESSION['role'] == 'A') {
+					echo "
+						<th>Updated At</th>
+					";
+				}
+
 				echo "
 					<th>Actions</th>
 				";
@@ -134,6 +140,7 @@
 				$brand = $data['brand'];
 				$quantity = $data['quantity'];
 				$price = $data['price'];
+				$updatedAt = $data['updatedAt'];
 
 				echo "<tr><td>" . $name . "</td>";
 				echo "<td>" . $brand . "</td>";
@@ -141,18 +148,20 @@
 				echo "<td>$" . $price . "</td>";
 
 				if(isset($_SESSION['role'])){
-					echo "<td>";
-					if ($_SESSION['role'] == 'A'){
+					if ($_SESSION['role'] == 'A' || $_SESSION['role'] == 'M'){
+						echo "<td>" . $updatedAt . "</td>";
+
+						echo "<td>";
 						echo "<button type='button' onclick='changeStock($productID,\"$name\")' class='changeStock'>Change Stock</button>";
 						echo "<button type='button' onclick='changePrice($productID,\"$name\")' class='changePrice'>Change Price</button>";
+						echo "</td>";
 					}
 					else{
+						echo "<td>";
 						echo "<button type='button' onclick='purchase($productID,\"$name\")' class='purchase'>Purchase</button>";
 						echo "<button type='button' onclick='addToWishlist($productID)' class='addToWishlist'>Add to Wishlist</button>";
+						echo "<td>";
 					}
-
-
-					echo "</td>";
 				}
 				echo "</tr>";
 			}
