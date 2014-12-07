@@ -33,10 +33,11 @@ VALUES (cusID,prodID,
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `BrandsWithAtLeast`(IN `p` INT)
     NO SQL
-SELECT brand, SUM(price) as "total"
+SELECT brand, SUM(price*quantity) as "total"
 FROM product
 GROUP BY brand
-HAVING total > p$$
+HAVING total > p
+ORDER BY total DESC$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ChangeStock`(IN `ID` INT, IN `quant` INT)
     NO SQL

@@ -1,3 +1,9 @@
+Tire, 10, 100.00, Goodyear
+Sandwich, 25, 5.00, Subway
+Water Bottles, 30, 5.99, Crystal Geyser
+Chocolates, 20, 10.99, Lindor
+SNES, 10, 20.00, Nintendo
+Earphones, 20, 19.99, JVC
 Laptop, 50, 849.99, Lenovo
 Laptop, 50, 869.99, Asus
 iPod, 30, 199.99, Apple

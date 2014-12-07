@@ -100,7 +100,7 @@
 
 		}
 		else {
-			print "<h3>No Wishlisted Items.<h3>";
+			print "<h3>No Other Items.<h3>";
 		}
 
 	}	
