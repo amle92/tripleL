@@ -49,6 +49,8 @@
 				 | 
 				<a href='viewproducts.php'>View Products</a>
 				 | 
+				<a href='viewproductsnotinWishList.php'>View Non Wishlist Products</a>
+				 |
 				<a href='viewtopwishlist.php'>View Top Wishlisted</a>
 				 | 
 				<a href='edituser.php'>Edit Info</a>
