@@ -107,6 +107,7 @@
 				$.post("modifyWishlist.php", {productID:id,action:"add"},function(){
 					alert("Item added to wishlist");
 				});
+			}
 		</script>
 
 		<?php require_once("config.php"); ?>

@@ -142,14 +142,16 @@
 								}
 								else if(data == 1){
 									alert("You purchased "+ quant + " " + name);
-									/*
-									confirm = window.confirm("Do you want to keep " + name + " on your wishlist?");
 									
-									if (!confirm){
+									confirm = window.confirm("Do you want to remove " + name + " on your wishlist?");
+									
+									if (confirm){
 										removeFromWishlist(prodID);
 									}
-									*/
-									location.reload();
+									else {
+										location.reload();
+									}
+									
 								}
 							});
 						}
