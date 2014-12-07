@@ -4,6 +4,11 @@
 
 	$customerID = $_SESSION['customerID'];
 
+	$query2 = "SELECT productID, name, brand, quantity, price
+				FROM product AS prod
+				WHERE NOT EXISTS(SELECT * FROM WISHLIST AS wish WHERE prod.productID = wish.productID)";
+	$result2 = mysqli_query($conn ,$query2)or die(mysqli_error($conn));
+	
 	$query = "CALL getWishlistedItems('$customerID');";
 	$result = mysqli_query($conn, $query) or die(mysql_error().$query);
 
@@ -51,8 +56,54 @@
 		else {
 			print "<h3>No Wishlisted Items.<h3>";
 		}
-
 	}
+
+	function printOtherItems(){
+		global $result2;
+
+		if(mysqli_num_rows($result2) > 0) {
+			echo "<table border='2'>
+				<thead>
+					<tr>
+						<th>Product Name</th>
+						<th>Brand</th>
+						<th>Quantity</th>
+						<th>Price</th>
+						<th>Action</th>
+					</tr>
+				</thead>";
+
+			while ($data2 = mysqli_fetch_array($result2)) {
+				$productID2 = $data2['productID'];
+				$name2 = $data2['name'];
+				$brand2 = $data2['brand'];
+				$quantity2 = $data2['quantity'];
+				$price2 = $data2['price'];
+
+				echo "<tr>";
+
+				echo "<td>" . $name2 . "</td>";
+				echo "<td>" . $brand2 . "</td>";
+				echo "<td>" . $quantity2 . "</td>";
+				echo "<td>$" . $price2 . "</td>";
+				echo "<td>";
+
+				echo "<button type='button' onclick='purchase($productID2,\"$name2\")' class='purchase'>Purchase</button>";
+				echo "<button type='button' onclick='addToWishlist($productID2)' class='addToWishlist'>Add to Wishlist</button>";
+				
+				echo "</td>";
+
+				echo "</tr>";
+			}
+
+			echo "</table>";
+
+		}
+		else {
+			print "<h3>No Wishlisted Items.<h3>";
+		}
+
+	}	
 ?>
 
 
@@ -113,6 +164,13 @@
 					location.reload();
 				});
 			}
+			
+			function addToWishlist(id) {
+				$.post("modifyWishlist.php", {productID:id,action:"add"},function(){
+					alert("Item added to wishlist");
+					location.reload();
+				});
+			}
 		</script>
 
 		<?php require_once("config.php"); ?>
@@ -122,6 +180,8 @@
 		<?php require_once("navbar.php"); ?>
 		<h3>Your wishlist: </h3>
 		<?php printWishlist(); ?>
+		<h3>Other items: </h3>
+		<?php printOtherItems(); ?>
 
 	</body>
 
