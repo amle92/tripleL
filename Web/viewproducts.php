@@ -2,8 +2,20 @@
 	session_start();
 	require_once("dbconnect.php");
 
-	$query = "SELECT * FROM product";
-	$result = mysqli_query($conn, $query);
+	$query;
+	$result;
+
+	if($_POST){
+		$column = $_POST['column'];
+		$order = $_POST['order'];
+
+		$query = "SELECT * FROM product ORDER BY $column $order";
+		$result = mysqli_query($conn, $query);
+	}
+	else {
+		$query = "SELECT * FROM product";
+		$result = mysqli_query($conn, $query);
+	}
 ?>
 
 <!DOCTYPE html>
@@ -106,6 +118,22 @@
 	<body>
 		<?php require_once("navbar.php"); ?>
 		<h3>List of all products</h3>
+
+		<form action='viewproducts.php' method='post'>
+			<label>Sort By:</label>
+			<select name="column">
+				<option value="name">Name</option>
+				<option value="brand">Brand</option>
+				<option value="quantity">Quantity</option>
+				<option value="price">Price</option>
+			</select>
+
+			<select name="order">
+				<option value="ASC">Ascending</option>
+				<option value="DESC">Descending</option>
+			</select>
+			<input type='submit' name='submit' value='Sort'>
+		</form>
 		
 		<?php
 			echo "
