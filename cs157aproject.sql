@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2014 at 02:26 AM
+-- Generation Time: Dec 07, 2014 at 02:19 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`productID`),
   KEY `quantity` (`quantity`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
 
 --
 -- Dumping data for table `product`
@@ -127,7 +127,30 @@ CREATE TABLE IF NOT EXISTS `product` (
 INSERT INTO `product` (`productID`, `name`, `quantity`, `price`, `brand`, `updatedAt`) VALUES
 (17, 'Umbrella', 5, '4.99', 'Kirkland', '2014-12-04 21:57:45'),
 (18, 'Lighter', 28, '1.99', 'BIC', '2014-12-04 22:01:11'),
-(19, 'Facial Tissue', 91, '4.99', 'Kleenex', '2014-12-04 22:25:44');
+(19, 'Facial Tissue', 91, '4.99', 'Kleenex', '2014-12-04 22:25:44'),
+(20, 'Laptop', 50, '849.99', 'Lenovo\r\n', '2014-12-06 16:03:50'),
+(21, 'Laptop', 50, '869.99', 'Asus\r\n', '2014-12-06 16:03:50'),
+(22, 'iPod', 30, '199.99', 'Apple\r\n', '2014-12-06 16:03:50'),
+(23, 'BBQ Chips', 50, '2.99', 'Lays\r\n', '2014-12-06 16:03:50'),
+(24, 'Mac and Cheese', 40, '1.00', 'Kraft\r\n', '2014-12-06 16:03:50'),
+(25, 'Deathadder Mouse', 15, '69.99', 'Razer\r\n', '2014-12-06 16:03:50'),
+(26, 'Television', 5, '1999.99', 'Sharp\r\n', '2014-12-06 16:03:50'),
+(27, 'Anime', 70, '24.99', 'Funimation\r\n', '2014-12-06 16:03:50'),
+(28, 'iPad', 34, '499.99', 'Apple\r\n', '2014-12-06 16:03:50'),
+(29, 'Coffee', 200, '5.00', 'Starbucks\r\n', '2014-12-06 16:03:50'),
+(30, 'Cereal', 30, '3.99', 'Kelloggs\r\n', '2014-12-06 16:03:50'),
+(31, 'Backpack', 15, '10.00', 'Jansport\r\n', '2014-12-06 16:03:50'),
+(32, 'Candy Bar', 60, '1.00', 'Hersheys\r\n', '2014-12-06 16:03:50'),
+(33, 'Gift Card', 40, '25.00', 'Amazon\r\n', '2014-12-06 16:03:50'),
+(34, 'Gift Card', 40, '25.00', 'Facebook\r\n', '2014-12-06 16:03:50'),
+(35, 'Gift Card', 40, '25.00', 'Riot Games\r\n', '2014-12-06 16:03:50'),
+(36, 'Blue Shirt', 10, '200.00', 'Lacoste\r\n', '2014-12-06 16:03:50'),
+(37, 'Red Shirt', 10, '180.00', 'Lacoste\r\n', '2014-12-06 16:03:50'),
+(38, 'Halo', 10, '69.99', 'Bungie\r\n', '2014-12-06 16:03:50'),
+(39, 'Half Life 3', 1, '1337.33', 'Valve\r\n', '2014-12-06 16:03:50'),
+(40, 'Underwear', 10, '5.99', 'Fruit of the Loom\r\n', '2014-12-06 16:03:50'),
+(41, 'Shoes', 30, '22.49', 'Nike\r\n', '2014-12-06 16:03:50'),
+(42, 'Klondike Bar', 15, '2.99', 'Klondike', '2014-12-06 16:03:50');
 
 --
 -- Triggers `product`
@@ -138,9 +161,27 @@ CREATE TRIGGER `productUpdate` AFTER UPDATE ON `product`
  FOR EACH ROW BEGIN
 UPDATE wishlist SET quantity = NEW.quantity
 WHERE productID = NEW.productID;
+
+DELETE FROM productarchive
+WHERE productID = NEW.productID;
 END
 //
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `productarchive`
+--
+
+CREATE TABLE IF NOT EXISTS `productarchive` (
+  `productID` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` varchar(10) NOT NULL,
+  `brand` varchar(50) NOT NULL,
+  `updatedAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -266,6 +307,16 @@ ALTER TABLE `users`
 ALTER TABLE `wishlist`
   ADD CONSTRAINT `wishlist_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+DELIMITER $$
+--
+-- Events
+--
+CREATE DEFINER=`root`@`localhost` EVENT `archiveproduct` ON SCHEDULE EVERY 1 DAY STARTS '2014-12-06 17:10:08' ON COMPLETION NOT PRESERVE ENABLE DO INSERT INTO productarchive
+SELECT * FROM product p
+WHERE (DATEDIFF(p.updatedAt, NOW())) > 7$$
+
+DELIMITER ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
