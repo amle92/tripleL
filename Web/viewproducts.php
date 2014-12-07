@@ -126,6 +126,16 @@
 				<option value="brand">Brand</option>
 				<option value="quantity">Quantity</option>
 				<option value="price">Price</option>
+				<?php 
+					if(isset($_SESSION)) {
+						$role = $_SESSION['role'];
+
+						if ($role == 'A' || $role == 'M') {
+							echo "<option value='updatedAt'>Updated At</option>";
+						}
+					}
+
+				?>
 			</select>
 
 			<select name="order">
