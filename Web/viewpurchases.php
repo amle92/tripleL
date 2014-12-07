@@ -7,9 +7,9 @@
 	function printAllPurchases() {
 		global $conn;
 
-		$query = "SELECT pur.purchaseID,pur.productID,pur.customerID,cust.name as cname,prod.name as pname,pur.buyquantity,pur.datetime
-			FROM purchases pur,product prod,customer cust 
-			WHERE pur.productID=prod.productID AND cust.customerID=pur.customerID";
+		$query = "SELECT pur.purchaseID,pur.productID,cust.customerID,cust.name as cname,prod.name as pname,pur.buyquantity,pur.datetime
+			FROM purchases pur JOIN product prod RIGHT OUTER JOIN customer cust 
+			ON pur.productID=prod.productID AND cust.customerID=pur.customerID";
 		$result = mysqli_query($conn,$query);
 
 		if (mysqli_num_rows($result) == 0) {
@@ -36,7 +36,14 @@
 			while ($data = mysqli_fetch_array($result)) {
 				echo "<tr>";
 
-				echo "<td>" . $data['purchaseID'] . "</td>";
+				if($data['purchaseID'] != "")
+				{
+					echo "<td>" . $data['purchaseID'] . "</td>";
+				}
+				else
+				{
+					echo "<td>No Purchases</td>";
+				}
 				echo "<td>" . $data['customerID'] . "</td>";
 				echo "<td>" . $data['cname'] . "</td>";
 				echo "<td>" . $data['productID'] . "</td>";
