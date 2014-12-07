@@ -21,7 +21,13 @@
 			$_SESSION['username'] = $username;
 			$_SESSION['customerID'] = $customerID;
 			$_SESSION['role'] = $data['role'];
-			header('Location: userpage.php');
+			if ($_SESSION['role'] == 'U') {
+				header('Location: userpage.php');
+			}
+			else {
+				header('Location: viewproducts.php');
+			}
+			
 		}
 		else {
 			print "Incorrect Password.";
