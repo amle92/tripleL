@@ -21,7 +21,7 @@
 
 		}
 		else{
-			$query = "INSERT INTO product(name,quantity,price,brand,updatedAt) VALUES ('$name','$quantity','$price','$brand',now())";
+			$query = "INSERT INTO product(name,quantity,price,brand,updatedAt) VALUES ('$name','$quantity','$price','$brand',NOW())";
 			$result = mysqli_query($conn,$query) or die(mysql_error().$query);
 
 			print("Successfully added $name by $brand");
@@ -31,7 +31,6 @@
 			$price = "";
 			$brand = "";
 		}
-
 	}
 
 	function addproductform(){
@@ -69,11 +68,25 @@
 
 <head>
 	<?php require_once("config.php"); ?>
+
+	<script>
+		function addproduct(){
+			if(window.confirm("Are you sure you want to add the products?")){
+				$.post("addbulk.php",{type:"bulk"},function(data){
+					alert(data);
+				});
+			}
+		}
+	</script>
+
 </head>
 
 <body>
 	<?php require_once("navbar.php"); ?>
-	<h3>Add a Product</h3>
+	<h3>Add products from file</h3>
+	<button type='button' class='addproduct' onclick='addproduct()'>Add Products</button>
+
+	<h3>Add a Product Manually</h3>
 	<?php addproductform(); ?>
 </body>
 
