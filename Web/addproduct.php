@@ -49,7 +49,7 @@
 				<br>
 				<div>
 					<label for='price'>Price: </label>
-					<input type='text' name='price' placeholder='9.99' value='$price' pattern='[0-9]{1}[.][0-9]{2}' required>
+					<input type='text' name='price' placeholder='9.99' value='$price' pattern='[0-9]{1,10}[.][0-9]{2}' required>
 				</div>
 				<br>
 				<div>
