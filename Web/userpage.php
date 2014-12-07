@@ -73,31 +73,36 @@
 					else if(quant == null){
 						quant = 0;
 					}
-				}
+					else
+					{
+						var confirm = window.confirm("Are you sure you want to buy " + quant + " " + name + "?");
 
-				var confirm = window.confirm("Are you sure you want to buy " + quant + " " + name + "?");
-
-				if (confirm) {
-					$.post("purchaseproduct.php",{productID:prodID,quantity:quant},function(data){
-						//alert(data);
-						if(data == -1){
-							alert("We do not have enough stock for your purchase. Please try again.");
+						if (confirm) {
+							$.post("purchaseproduct.php",{productID:prodID,quantity:quant},function(data){
+								//alert(data);
+								if(data == -1){
+									alert("We do not have enough stock for your purchase. Please try again.");
+								}
+								else if(data == -2){
+									alert("Please enter a positive whole number greater than 0.");
+								}
+								else if(data == 0){
+									alert("Please enter your credit card information first (Edit Info).");
+								}
+								else if(data == 1){
+									alert("You purchased "+ quant + " " + name);
+									/*
+									confirm = window.confirm("Do you want to keep " + name + " on your wishlist?");
+									
+									if (!confirm){
+										removeFromWishlist(prodID);
+									}
+									*/
+									location.reload();
+								}
+							});
 						}
-						else if(data == -2){
-							alert("Please enter a positive whole number greater than 0.");
-						}
-						else if(data == 0){
-							alert("Please enter your credit card information first (Edit Info).");
-						}
-						else if(data == 1){
-							alert("You purchased "+ quant + " " + name);
-							confirm = window.confirm("Do you want to keep " + name + " on your wishlist?");
-							if (!confirm){
-								removeFromWishlist(prodID);
-							}
-							location.reload();
-						}
-					});
+					}
 				}
 			}
 
