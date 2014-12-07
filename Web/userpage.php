@@ -143,7 +143,7 @@
 								else if(data == 1){
 									alert("You purchased "+ quant + " " + name);
 									
-									confirm = window.confirm("Do you want to remove " + name + " on your wishlist?");
+									confirm = window.confirm("Do you want to remove " + name + " from your wishlist?");
 									
 									if (confirm){
 										removeFromWishlist(prodID);
